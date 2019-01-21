@@ -39,7 +39,7 @@ What we want to happen here is that every call to incrementDbValue increments th
 The following code using persist-lock does not exhibit this problematic behavior. The final value is 100, as expected.
 
 ```js
-const persistLock = require('./index.js');
+const persistLock = require('persist-lock');
 const persistence = new persistLock(__dirname);
 
 async function incrementDbValue() {
