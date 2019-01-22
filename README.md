@@ -40,7 +40,8 @@ The following code using persist-lock's functional edits does not exhibit this p
 
 ```js
 const PersistLock = require('persist-lock');
-const persistence = new PersistLock(__dirname);
+const path = require('path');
+const persistence = new persistLock(path.join(__dirname, 'persistence'));
 
 async function incrementDbValue() {
   await persistence.editItem('counter', currentValue => {
@@ -50,6 +51,7 @@ async function incrementDbValue() {
 
 async function start() {
   await persistence.init();
+  await persistence.clear();
 
   const promises = [];
   for (let i = 0; i < 100; i += 1) {

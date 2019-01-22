@@ -4,7 +4,7 @@
   "description": "On disk persistence with safer writes.",
   "main": "index.js",
   "dependencies": {
-    "filenamify": "^2.1.0",
+    "md5": "^2.2.1",
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {},
