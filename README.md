@@ -39,8 +39,8 @@ What we want to happen here is that every call to incrementDbValue increments th
 The following code using persist-lock's functional edits does not exhibit this problematic behavior. The final value is 100, as expected.
 
 ```js
-const persistLock = require('persist-lock');
-const persistence = new persistLock(__dirname);
+const PersistLock = require('persist-lock');
+const persistence = new PersistLock(__dirname);
 
 async function incrementDbValue() {
   await persistence.editItem('counter', currentValue => {
