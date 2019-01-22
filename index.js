@@ -61,13 +61,18 @@ class Storage {
       writeQueueForKey[key] = Promise.resolve();
     }
 
-    writeQueueForKey[key] = writeQueueForKey[key].then(async () => {
+    const promise =  writeQueueForKey[key].then(async () => {
       const currentData = await readData(this.persistenceDir, key);
       const newData = await editFunction(currentData);
       await writeData(this.persistenceDir, key, newData, this.stringify);
+
+      if (writeQueueForKey[key] === promise) {
+        delete writeQueueForKey[key];
+      }
     });
 
-    return writeQueueForKey[key];
+    writeQueueForKey[key] = promise;
+    return promise;
   }
 
   getItem(key) {

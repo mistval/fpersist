@@ -4,7 +4,7 @@ On disk persistence with safer writes. WIP
 
 ## Motivation
 
-This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking. This library is meant to improve on that.
+This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits. This library is meant to improve on that.
 
 Consider the following code using node-persist:
 
@@ -36,7 +36,7 @@ start();
 
 What we want to happen here is that every call to incrementDbValue increments the value in the database by one, so the value in the database should be equal to the number of times the function has been called (100). However, that doesn't happen, the final value is equal to 1. What happens is the code reads 0 from storage a hundred times, then increments that 0 to 1 a hundred times, and then stores the 1 a hundred times.
 
-The following code using persist-lock does not exhibit this problematic behavior. The final value is 100, as expected.
+The following code using persist-lock's functional edits does not exhibit this problematic behavior. The final value is 100, as expected.
 
 ```js
 const persistLock = require('persist-lock');
