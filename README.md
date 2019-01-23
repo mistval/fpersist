@@ -12,11 +12,11 @@ You can pass a custom stringify function if you want, but the returned value sho
 
 ### `await fpersist.init()`
 
-Initialize fpersist. You must call this before user other methods.
+Initialize fpersist. You must call this before using other methods.
 
 ### `await fpersist.clear()`
 
-Clear persistence and start fresh. This deletes ALL files in the persistence directory, including files not created by FPersist.
+Clear persistence and start afresh. This deletes ALL files in the persistence directory, including files not created by FPersist.
 
 ### `await fpersist.getItem(key, defaultValue)`
 
@@ -43,7 +43,7 @@ await fpersist.editItem(
 
 ## Motivation
 
-This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits. This library is meant to improve on that while maintaining a very similar interface.
+This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar interface.
 
 Consider the following code using node-persist:
 
