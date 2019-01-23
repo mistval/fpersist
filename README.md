@@ -39,7 +39,7 @@ await fpersist.editItem(
     scores.johnDoe += 1;
     return scores;
   },
-  {},
+  { johnDoe: 0 },
 );
 ```
 
