@@ -36,10 +36,11 @@ Update the value associated with the given key. Your editFunction should take th
 await fpersist.editItem(
   'scores',
   (scores) => {
+    scores.johnDoe = scores.johnDoe || 0;
     scores.johnDoe += 1;
     return scores;
   },
-  { johnDoe: 0 },
+  {},
 );
 ```
 
