@@ -45,7 +45,7 @@ await fpersist.editItem(
 
 ## Motivation
 
-This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar interface.
+This is inspired by [https://www.npmjs.com/package/node-persist](node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar interface.
 
 Consider the following code using node-persist:
 
