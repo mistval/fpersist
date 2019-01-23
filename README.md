@@ -2,7 +2,7 @@
 
 Simple key-value on disk persistence with safe, functional writes. WIP
 
-FPersist is inspired by [https://www.npmjs.com/package/node-persist](node-persist) and is intended to solve some shortcomings of node-persist, described more in the **Motivation** section below. If you already have data stored with node-persist, FPersist can use it, just tell FPersist to use your node-persist directory.
+FPersist is inspired by [https://www.npmjs.com/package/node-persist](node-persist) and is intended to solve some shortcomings of node-persist, described more in the **Motivation** section below. If you already have data stored with node-persist, FPersist can use it, just tell FPersist to use your node-persist directory. Likewise, you can go back to node-persist at any time, the on-disk data format is the same.
 
 ## API
 
