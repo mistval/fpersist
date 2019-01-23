@@ -6,11 +6,17 @@ FPersist is inspired by [node-persist](https://www.npmjs.com/package/node-persis
 
 ## API
 
-### `const fpersist = new FPersist(persistenceDirPath, stringify=JSON.stringify)`
+### `const fpersist = new FPersist(persistenceDirPath, options)`
 
 Create an instance of FPersist and retrieve/store data from/to the provided directory path. If the path doesn't exist, it will be created. It is safe to instantiate multiple instances of FPersist with the same persistenceDirPath **within the same process**. Ideally, you shouldn't let anything except FPersist use this directory.
 
-You can pass a custom stringify function if you want, but the returned value should be parsable by JSON.parse. If you want human-readable JSON files in your persistenceDirPath, try `str => JSON.stringify(str, null, 2)`.
+The options are:
+```js
+{
+  stringify: JSON.stringify, // The function to use to stringify data before storing it to disk.
+  allowUndefinedEdits: false, // If false, returning undefined from an editFunction will throw. This is to protect you from accidentally destroying data when you forget to return a value from an editFunction.
+}
+```
 
 ### `await fpersist.clear()`
 
