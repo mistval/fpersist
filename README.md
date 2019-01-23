@@ -36,7 +36,7 @@ start();
 
 What I want to happen is that every call to incrementDbValue increments the value in the database by one, so the value in the database should be equal to the number of times the function has been called (100). However, that doesn't happen, the final value is equal to 1 (and technically could be some other indeterminable number less than or equal to 100). What happens is that node-persist reads 0 from storage a hundred times, then increments that 0 to 1 a hundred times, and then stores the 1 a hundred times.
 
-The following code using fpersist's functional edits does not exhibit this problematic behavior. The final value is 100, as expected.
+The following code using fpersist's functional edits does not exhibit this problematic behavior. The final value is 100.
 
 ```js
 const FPersist = require('fpersist');
