@@ -5,7 +5,7 @@ class Storage {
   /**
    * @constructor
    * @param {string} persistenceDir - The directory to persist data to.
-   * @param {function} [JSON.stringify] stringify - A function that stringifies a JavaScript object.
+   * @param {Function} [stringify=JSON.stringify] - A function that takes a JavaScript object as its only parameter and returns a string.
    */
   constructor(persistenceDir, stringify = JSON.stringify) {
     this.persistenceDir = persistenceDir;
