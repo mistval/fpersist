@@ -20,7 +20,7 @@ Initialize fpersist. You must call this before using other methods.
 
 Clear persistence and start afresh. This deletes ALL files in the persistence directory, including files not created by FPersist.
 
-### `await fpersist.getItem(key, defaultValue)`
+### `await fpersist.getItem(key, defaultValue=undefined)`
 
 Get the value associated with the given key. If the key doesn't exist in the database, the optional defaultValue will be returned (undefined by default).
 
