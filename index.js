@@ -8,9 +8,16 @@ class Storage {
    * @param {Function} [stringify=JSON.stringify] - A function that takes a JavaScript object as its only parameter and returns a string.
    */
   constructor(persistenceDir, stringify = JSON.stringify) {
+    this.closed = false;
     this.persistenceDir = persistenceDir;
     this.stringify = stringify;
     this.writeQueueForKey = {};
+  }
+
+  verifyNotClosed() {
+    if (this.closed) {
+      throw new Error('This FPersist instance has been close()d and cannot accept any more edits.');
+    }
   }
 
   /**
@@ -32,6 +39,7 @@ class Storage {
    * @async
    */
   editItem(key, editFunction, defaultValue) {
+    this.verifyNotClosed();
     if (!this.writeQueueForKey[key]) {
       this.writeQueueForKey[key] = Promise.resolve();
     }
@@ -57,6 +65,7 @@ class Storage {
    * @async
    */
   clear() {
+    this.verifyNotClosed();
     return filesystem.deleteDirectoryContents(this.persistenceDir);
   }
 
@@ -70,6 +79,20 @@ class Storage {
    */
   getItem(key, defaultValue) {
     return filesystem.readData(this.persistenceDir, key, defaultValue);
+  }
+
+  /**
+   * Tell FPersist to finish queued edits and refuse to accept any more edits.
+   * Reads can still be safely performed after calling this method.
+   * Edits will throw.
+   * The promise returned by this method will be fulfilled when all pending edits
+   * have been performed.
+   * @async
+   */
+  close() {
+    this.closed = true;
+    var queues = Object.values(this.writeQueueForKey);
+    return Promise.all(queues);
   }
 }
 

@@ -44,6 +44,10 @@ await fpersist.editItem(
 );
 ```
 
+### `await fpersist.close()`
+
+Tell the fpersist instance to finish queued edits and refuse to accept any more edits. Reads can still be safely performed after calling this method. Edits will throw. The promise returned by this method will be fulfilled when all pending edits have been performed. If you are going to exit the process, you should await this method first to make sure that all pending edits are finished.
+
 ## Motivation
 
 FPersist is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I am moving away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar (but presently more limited) interface.
