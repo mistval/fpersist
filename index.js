@@ -27,7 +27,7 @@ class Storage {
    * @param {function} editFunction - A function that takes the current value
    *   in the database as an argument, and returns the updated value that should
    *   be stored.
-   * @param {Object} [undefined] defaultValue - If the key does not exist in the database,
+   * @param {*} [defaultValue] - If the key does not exist in the database,
    *   this value will be passed to the editFunction.
    * @async
    */
@@ -63,7 +63,7 @@ class Storage {
   /**
    * Get the value in the database for a given key.
    * @param {string} key - The key to get the value of.
-   * @param {Object} [undefined] defaultValue - If the key
+   * @param {*} [defaultValue] - If the key
    *   does not exist in the database, this value will be
    *   returned.
    * @async
