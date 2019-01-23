@@ -41,17 +41,17 @@ The following code using fpersist's functional edits does not exhibit this probl
 ```js
 const FPersist = require('fpersist');
 const path = require('path');
-const persistence = new FPersist(path.join(__dirname, 'persistence'));
+const fpersist = new FPersist(path.join(__dirname, 'fpersist'));
 
 function incrementDbValue() {
-  return persistence.editItem('counter', currentValue => {
+  return fpersist.editItem('counter', currentValue => {
     return (currentValue || 0) + 1;
   });
 }
 
 async function start() {
-  await persistence.init();
-  await persistence.clear();
+  await fpersist.init();
+  await fpersist.clear();
 
   const promises = [];
   for (let i = 0; i < 100; i += 1) {
@@ -59,7 +59,7 @@ async function start() {
   }
 
   await Promise.all(promises);
-  const finalValue = await persistence.getItem('counter');
+  const finalValue = await fpersist.getItem('counter');
 
   console.log(`Expected 100, got ${finalValue}`);
 }
