@@ -5,12 +5,16 @@ class Storage {
   /**
    * @constructor
    * @param {string} persistenceDir - The directory to persist data to.
-   * @param {Function} [stringify=JSON.stringify] - A function that takes a JavaScript object as its only parameter and returns a string.
+   * @param {Object} [options={}] - Optional options.
+   * @param {Function} [options.stringify=JSON.stringify] - A function that takes a JavaScript object as its only parameter and returns a string.
+   * @param {boolean} [options.allowUndefinedEdits=false] - Whether to allow editFunctions to return undefined.
+   *   Leaving this false helps you avoid accidentally deleting data by forgetting to return something from an editFunction.
    */
-  constructor(persistenceDir, stringify = JSON.stringify) {
+  constructor(persistenceDir, options={}) {
     this.closed = false;
     this.persistenceDir = persistenceDir;
-    this.stringify = stringify;
+    this.stringify = options.stringify || JSON.stringify;
+    this.allowUndefinedEdits = options.allowUndefinedEdits || false;
     this.writeQueueForKey = {};
     this.madeDir = mkdirp(this.persistenceDir);
   }
@@ -40,6 +44,9 @@ class Storage {
     const promise = this.writeQueueForKey[key].catch(() => {}).then(async () => {
       const currentData = await filesystem.readData(this.persistenceDir, key, defaultValue);
       const newData = await editFunction(currentData);
+      if (newData === undefined && !this.allowUndefinedEdits) {
+        throw new Error('editFunction returned undefined. Is that a mistake? To disable this error, set options.allowUndefinedEdits to true in the FPersist constructor.');
+      }
       await filesystem.writeData(this.persistenceDir, key, newData, this.stringify);
 
       if (this.writeQueueForKey[key] === promise) {
