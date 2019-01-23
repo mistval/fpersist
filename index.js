@@ -12,20 +12,13 @@ class Storage {
     this.persistenceDir = persistenceDir;
     this.stringify = stringify;
     this.writeQueueForKey = {};
+    this.madeDir = mkdirp(this.persistenceDir);
   }
 
   verifyNotClosed() {
     if (this.closed) {
       throw new Error('This FPersist instance has been close()d and cannot accept any more edits.');
     }
-  }
-
-  /**
-   * Initialize persistence.
-   * @async
-   */
-  init() {
-    return mkdirp(this.persistenceDir);
   }
 
   /**
@@ -36,9 +29,9 @@ class Storage {
    *   be stored.
    * @param {*} [defaultValue] - If the key does not exist in the database,
    *   this value will be passed to the editFunction.
-   * @async
    */
-  editItem(key, editFunction, defaultValue) {
+  async editItem(key, editFunction, defaultValue) {
+    await this.madeDir;
     this.verifyNotClosed();
     if (!this.writeQueueForKey[key]) {
       this.writeQueueForKey[key] = Promise.resolve();
@@ -62,9 +55,9 @@ class Storage {
    * Delete all files in the persistence directory.
    * ALL files in the persistence directory will be deleted,
    * not only those created by fpersist.
-   * @async
    */
-  clear() {
+  async clear() {
+    await this.madeDir;
     this.verifyNotClosed();
     return filesystem.deleteDirectoryContents(this.persistenceDir);
   }
@@ -75,9 +68,9 @@ class Storage {
    * @param {*} [defaultValue] - If the key
    *   does not exist in the database, this value will be
    *   returned.
-   * @async
    */
-  getItem(key, defaultValue) {
+  async getItem(key, defaultValue) {
+    await this.madeDir;
     return filesystem.readData(this.persistenceDir, key, defaultValue);
   }
 
@@ -87,9 +80,9 @@ class Storage {
    * Edits will throw.
    * The promise returned by this method will be fulfilled when all pending edits
    * have been performed.
-   * @async
    */
-  close() {
+  async close() {
+    await this.madeDir;
     this.closed = true;
     var queues = Object.values(this.writeQueueForKey);
     return Promise.all(queues);

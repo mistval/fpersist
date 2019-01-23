@@ -12,10 +12,6 @@ Create an instance of FPersist and retrieve/store data from/to the provided dire
 
 You can pass a custom stringify function if you want, but the returned value should be parsable by JSON.parse. If you want human-readable JSON files in your persistenceDirPath, try `str => JSON.stringify(str, null, 2)`.
 
-### `await fpersist.init()`
-
-Initialize fpersist. You must call this before using other methods.
-
 ### `await fpersist.clear()`
 
 Clear persistence and start afresh. This deletes ALL files in the persistence directory, including files not created by FPersist.
@@ -96,7 +92,6 @@ function incrementDbValue() {
 }
 
 async function start() {
-  await fpersist.init();
   await fpersist.clear();
 
   const promises = [];
