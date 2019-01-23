@@ -30,7 +30,7 @@ const counter = await fpersist.getItem('counter', 0);
 
 ### `await fpersist.editItem(key, editFunction, defaultValue=undefined)`
 
-Update the value associated with the given key. Your edit function should take the current value as an argument and return the updated value. If the key is not present in the database, the defaultValue will be passed to your editFunction. Your edit function can be async. Edits are queued and won't conflict, as demonstrated in the **Motivation** section.
+Update the value associated with the given key. Your editFunction should take the current value as an argument and return the updated value. If the key is not present in the database, the defaultValue will be passed to your editFunction. Your editFunction can be async. Edits are queued and won't conflict, as demonstrated in the **Motivation** section.
 
 ```js
 await fpersist.editItem(
