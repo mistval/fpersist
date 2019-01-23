@@ -2,7 +2,7 @@
 
 Simple key-value on disk persistence with safe, functional writes. WIP
 
-FPersist is inspired by [https://www.npmjs.com/package/node-persist](node-persist) and is intended to solve some shortcomings of node-persist, described more in the **Motivation** section below. If you already have data stored with node-persist, FPersist can use it, just tell FPersist to use your node-persist directory. Likewise, you can go back to node-persist at any time, the on-disk data format is the same.
+FPersist is inspired by [node-persist](https://www.npmjs.com/package/node-persist) and is intended to solve some shortcomings of node-persist, described more in the **Motivation** section below. If you already have data stored with node-persist, FPersist can use it, just tell FPersist to use your node-persist directory. Likewise, you can go back to node-persist at any time, the on-disk data format is the same.
 
 ## API
 
@@ -45,7 +45,7 @@ await fpersist.editItem(
 
 ## Motivation
 
-This is inspired by [https://www.npmjs.com/package/node-persist](node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar interface.
+This is inspired by [node-persist](https://www.npmjs.com/package/node-persist) which I moved away from due to its lack of support for multiple-readers/single-writer locking (the absense of which can potentially lead to database corruption) and functional edits (the absence of which can potentially lead to lost information). This library is meant to improve on that while maintaining a very similar interface.
 
 Consider the following code using node-persist:
 
