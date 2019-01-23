@@ -3,7 +3,7 @@ const path = require('path');
 const md5 = require('md5');
 
 function getFilePath(persistenceDir, key) {
-  return path.join(persistenceDir, `${md5(key)}.json`);
+  return path.join(persistenceDir, `${md5(key)}`);
 }
 
 function unlinkFile(filePath) {
@@ -51,7 +51,7 @@ function readData(persistenceDir, key, defaultValue) {
         return reject(err);
       }
 
-      fulfill(JSON.parse(data));
+      fulfill(JSON.parse(data).value);
     });
   });
 }
@@ -60,7 +60,7 @@ function writeData(persistenceDir, key, data, stringify) {
   const filePath = getFilePath(persistenceDir, key);
 
   return new Promise((fulfill, reject) => {
-    fs.writeFile(filePath, stringify(data), (err) => {
+    fs.writeFile(filePath, stringify({ key, value: data }), (err) => {
       if (err) {
         return reject(err);
       }
