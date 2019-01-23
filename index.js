@@ -1,81 +1,11 @@
 const mkdirp = require('mkdirp');
-const fs = require('fs');
-const path = require('path');
-const md5 = require('md5');
-
-function getFilePath(persistenceDir, key) {
-  return path.join(persistenceDir, `${md5(key)}.json`);
-}
-
-function readData(persistenceDir, key) {
-  const filePath = getFilePath(persistenceDir, key);
-
-  return new Promise((fulfill, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        // If file not found, return undefined
-        if (err.code === 'ENOENT') {
-          return fulfill();
-        }
-
-        return reject(err);
-      }
-
-      fulfill(JSON.parse(data));
-    });
-  });
-}
-
-function writeData(persistenceDir, key, data, stringify) {
-  const filePath = getFilePath(persistenceDir, key);
-
-  return new Promise((fulfill, reject) => {
-    fs.writeFile(filePath, stringify(data), (err) => {
-      if (err) {
-        return reject(err);
-      }
-
-      fulfill();
-    });
-  });
-}
-
-function unlinkFile(filePath) {
-  return new Promise((fulfill, reject) => {
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        return reject(err);
-      }
-
-      fulfill();
-    });
-  });
-}
-
-function getPathsInDir(persistenceDir) {
-  return new Promise((fulfill, reject) => {
-    fs.readdir(persistenceDir, (err, fileNames) => {
-      if (err) {
-        return reject(err);
-      }
-
-      const filePaths = fileNames.map(fileName => path.join(persistenceDir, fileName));
-      fulfill(filePaths);
-    });
-  });
-}
-
-async function deleteDirectoryContents(persistenceDir) {
-  const filePaths = await getPathsInDir(persistenceDir);
-  const promises = filePaths.map(filePath => unlinkFile(filePath));
-
-  return Promise.all(promises);
-}
+const filesystem = require('./filesystem.js');
 
 class Storage {
   /**
-   * 
+   * @constructor
    * @param {string} persistenceDir - The directory to persist data to.
+   * @param {function} [JSON.stringify] stringify - A function that stringifies a JavaScript object.
    */
   constructor(persistenceDir, stringify = JSON.stringify) {
     this.persistenceDir = persistenceDir;
@@ -83,19 +13,33 @@ class Storage {
     this.writeQueueForKey = {};
   }
 
-  async init() {
-    await mkdirp(this.persistenceDir);
+  /**
+   * Initialize persistence.
+   * @async
+   */
+  init() {
+    return mkdirp(this.persistenceDir);
   }
 
-  async editItem(key, editFunction) {
+  /**
+   * Edit the value of a key in the database.
+   * @param {string} key - The key to edit the value of.
+   * @param {function} editFunction - A function that takes the current value
+   *   in the database as an argument, and returns the updated value that should
+   *   be stored.
+   * @param {Object} [undefined] defaultValue - If the key does not exist in the database,
+   *   this value will be passed to the editFunction.
+   * @async
+   */
+  editItem(key, editFunction, defaultValue) {
     if (!this.writeQueueForKey[key]) {
       this.writeQueueForKey[key] = Promise.resolve();
     }
 
-    const promise =  this.writeQueueForKey[key].then(async () => {
-      const currentData = await readData(this.persistenceDir, key);
+    const promise = this.writeQueueForKey[key].catch(() => {}).then(async () => {
+      const currentData = await filesystem.readData(this.persistenceDir, key, defaultValue);
       const newData = await editFunction(currentData);
-      await writeData(this.persistenceDir, key, newData, this.stringify);
+      await filesystem.writeData(this.persistenceDir, key, newData, this.stringify);
 
       if (this.writeQueueForKey[key] === promise) {
         delete this.writeQueueForKey[key];
@@ -106,12 +50,26 @@ class Storage {
     return promise;
   }
 
+  /**
+   * Delete all files in the persistence directory.
+   * ALL files in the persistence directory will be deleted,
+   * not only those created by fpersist.
+   * @async
+   */
   clear() {
-    return deleteDirectoryContents(this.persistenceDir);
+    return filesystem.deleteDirectoryContents(this.persistenceDir);
   }
 
-  getItem(key) {
-    return readData(this.persistenceDir, key);
+  /**
+   * Get the value in the database for a given key.
+   * @param {string} key - The key to get the value of.
+   * @param {Object} [undefined] defaultValue - If the key
+   *   does not exist in the database, this value will be
+   *   returned.
+   * @async
+   */
+  getItem(key, defaultValue) {
+    return filesystem.readData(this.persistenceDir, key, defaultValue);
   }
 }
 

@@ -1,6 +1,6 @@
-# persist-lock
+# fpersist
 
-On disk persistence with safer writes. WIP
+Simple on disk persistence with safe, functional writes. WIP
 
 ## Motivation
 
@@ -34,17 +34,17 @@ async function start() {
 start();
 ```
 
-What we want to happen here is that every call to incrementDbValue increments the value in the database by one, so the value in the database should be equal to the number of times the function has been called (100). However, that doesn't happen, the final value is equal to 1. What happens is the code reads 0 from storage a hundred times, then increments that 0 to 1 a hundred times, and then stores the 1 a hundred times.
+What I want to happen is that every call to incrementDbValue increments the value in the database by one, so the value in the database should be equal to the number of times the function has been called (100). However, that doesn't happen, the final value is equal to 1. What happens is the code reads 0 from storage a hundred times, then increments that 0 to 1 a hundred times, and then stores the 1 a hundred times.
 
-The following code using persist-lock's functional edits does not exhibit this problematic behavior. The final value is 100, as expected.
+The following code using fpersist's functional edits does not exhibit this problematic behavior. The final value is 100, as expected.
 
 ```js
-const PersistLock = require('persist-lock');
+const FPersist = require('fpersist');
 const path = require('path');
-const persistence = new persistLock(path.join(__dirname, 'persistence'));
+const persistence = new FPersist(path.join(__dirname, 'persistence'));
 
-async function incrementDbValue() {
-  await persistence.editItem('counter', currentValue => {
+function incrementDbValue() {
+  return persistence.editItem('counter', currentValue => {
     return (currentValue || 0) + 1;
   });
 }

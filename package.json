@@ -1,7 +1,7 @@
 {
-  "name": "persist-lock",
+  "name": "fpersist",
   "version": "0.0.0",
-  "description": "On disk persistence with safer writes.",
+  "description": "Simple on disk persistence with safe, functional writes.",
   "main": "index.js",
   "dependencies": {
     "md5": "^2.2.1",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mistval/persist-lock.git"
+    "url": "git+https://github.com/mistval/fpersist.git"
   },
   "keywords": [
     "persistence",
@@ -27,7 +27,7 @@
   "author": "mistval",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mistval/persist-lock/issues"
+    "url": "https://github.com/mistval/fpersist/issues"
   },
-  "homepage": "https://github.com/mistval/persist-lock#readme"
+  "homepage": "https://github.com/mistval/fpersist#readme"
 }
