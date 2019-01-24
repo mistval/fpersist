@@ -8,10 +8,11 @@ class Storage {
    * @param {Object} [options={}] - Optional options.
    * @param {Function} [options.stringify=JSON.stringify] - A function that
    *   takes a JavaScript object as its only parameter and returns a string.
-   * @param {boolean} [options.allowUndefinedEdits=false] - Whether to allow editFunctions to return undefined.
-   *   Leaving this false helps you avoid accidentally deleting data by forgetting to return something from an editFunction.
+   * @param {boolean} [options.allowUndefinedEdits=false] - Whether to allow editFunctions to
+   *   return undefined. Leaving this false helps you avoid accidentally deleting data by
+   *   forgetting to return something from an editFunction.
    */
-  constructor(persistenceDir, options={}) {
+  constructor(persistenceDir, options = {}) {
     this.closed = false;
     this.persistenceDir = persistenceDir;
     this.stringify = options.stringify || JSON.stringify;

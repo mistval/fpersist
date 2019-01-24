@@ -13,7 +13,7 @@ function unlinkFile(filePath) {
         return reject(err);
       }
 
-      fulfill();
+      return fulfill();
     });
   });
 }
@@ -26,7 +26,7 @@ function getPathsInDir(persistenceDir) {
       }
 
       const filePaths = fileNames.map(fileName => path.join(persistenceDir, fileName));
-      fulfill(filePaths);
+      return fulfill(filePaths);
     });
   });
 }
@@ -51,7 +51,7 @@ function readData(persistenceDir, key, defaultValue) {
         return reject(err);
       }
 
-      fulfill(JSON.parse(data).value);
+      return fulfill(JSON.parse(data).value);
     });
   });
 }
@@ -65,7 +65,7 @@ function writeData(persistenceDir, key, data, stringify) {
         return reject(err);
       }
 
-      fulfill();
+      return fulfill();
     });
   });
 }
