@@ -3,7 +3,7 @@ const path = require('path');
 const md5 = require('md5');
 
 function getFilePath(persistenceDir, key) {
-  return path.join(persistenceDir, `${md5(key)}`);
+  return path.join(persistenceDir, md5(key));
 }
 
 function unlinkFile(filePath) {

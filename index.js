@@ -6,7 +6,8 @@ class Storage {
    * @constructor
    * @param {string} persistenceDir - The directory to persist data to.
    * @param {Object} [options={}] - Optional options.
-   * @param {Function} [options.stringify=JSON.stringify] - A function that takes a JavaScript object as its only parameter and returns a string.
+   * @param {Function} [options.stringify=JSON.stringify] - A function that
+   *   takes a JavaScript object as its only parameter and returns a string.
    * @param {boolean} [options.allowUndefinedEdits=false] - Whether to allow editFunctions to return undefined.
    *   Leaving this false helps you avoid accidentally deleting data by forgetting to return something from an editFunction.
    */
@@ -47,6 +48,7 @@ class Storage {
       if (newData === undefined && !this.allowUndefinedEdits) {
         throw new Error('editFunction returned undefined. Is that a mistake? To disable this error, set options.allowUndefinedEdits to true in the FPersist constructor.');
       }
+
       await filesystem.writeData(this.persistenceDir, key, newData, this.stringify);
 
       if (this.writeQueueForKey[key] === promise) {
@@ -59,7 +61,8 @@ class Storage {
   }
 
   /**
-   * Delete all files in the persistence directory.
+   * Delete the database and start afresh.
+   * This will delete all files in the persistence directory.
    * ALL files in the persistence directory will be deleted,
    * not only those created by fpersist.
    */
@@ -91,7 +94,7 @@ class Storage {
   async close() {
     await this.madeDir;
     this.closed = true;
-    var queues = Object.values(this.writeQueueForKey);
+    const queues = Object.values(this.writeQueueForKey);
     return Promise.all(queues);
   }
 }
