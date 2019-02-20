@@ -55,6 +55,8 @@ class Storage {
       if (this.writeQueueForKey[key] === promise) {
         delete this.writeQueueForKey[key];
       }
+
+      return newData;
     });
 
     this.writeQueueForKey[key] = promise;
