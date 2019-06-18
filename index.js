@@ -17,7 +17,7 @@ class Storage {
     this.persistenceDir = persistenceDir;
     this.stringify = options.stringify || JSON.stringify;
     this.allowUndefinedEdits = options.allowUndefinedEdits || false;
-    this.writeQueueForKey = {};
+    this.queueForKey = {};
     this.madeDir = mkdirp(this.persistenceDir);
   }
 
@@ -25,6 +25,23 @@ class Storage {
     if (this.closed) {
       throw new Error('This FPersist instance has been close()d and cannot accept any more edits.');
     }
+  }
+
+  async enqueueForKey(key, action) {
+    await this.madeDir;
+    this.verifyNotClosed();
+
+    if (!this.queueForKey[key]) {
+      this.queueForKey[key] = Promise.resolve();
+    }
+
+    const doAction = this.queueForKey[key].then(() => action());
+
+    this.queueForKey[key] = doAction
+      .catch(() => {})
+      .then(() => { delete this.queueForKey[key]; });
+
+    return doAction;
   }
 
   /**
@@ -37,13 +54,7 @@ class Storage {
    *   this value will be passed to the editFunction.
    */
   async editItem(key, editFunction, defaultValue) {
-    await this.madeDir;
-    this.verifyNotClosed();
-    if (!this.writeQueueForKey[key]) {
-      this.writeQueueForKey[key] = Promise.resolve();
-    }
-
-    const promise = this.writeQueueForKey[key].catch(() => {}).then(async () => {
+    return this.enqueueForKey(key, async () => {
       const currentData = await filesystem.readData(this.persistenceDir, key, defaultValue);
       const newData = await editFunction(currentData);
       if (newData === undefined && !this.allowUndefinedEdits) {
@@ -51,16 +62,8 @@ class Storage {
       }
 
       await filesystem.writeData(this.persistenceDir, key, newData, this.stringify);
-
-      if (this.writeQueueForKey[key] === promise) {
-        delete this.writeQueueForKey[key];
-      }
-
       return newData;
     });
-
-    this.writeQueueForKey[key] = promise;
-    return promise;
   }
 
   /**
@@ -83,21 +86,21 @@ class Storage {
    *   returned.
    */
   async getItem(key, defaultValue) {
-    await this.madeDir;
-    return filesystem.readData(this.persistenceDir, key, defaultValue);
+    return this.enqueueForKey(
+      key,
+      () => filesystem.readData(this.persistenceDir, key, defaultValue),
+    );
   }
 
   /**
-   * Tell FPersist to finish queued edits and refuse to accept any more edits.
-   * Reads can still be safely performed after calling this method.
-   * Edits will throw.
-   * The promise returned by this method will be fulfilled when all pending edits
+   * Tell FPersist to finish queued reads and edits and refuse to accept any more operations.
+   * The promise returned by this method will be fulfilled when all pending operations
    * have been performed.
    */
   async close() {
     await this.madeDir;
     this.closed = true;
-    const queues = Object.values(this.writeQueueForKey);
+    const queues = Object.values(this.queueForKey);
     return Promise.all(queues);
   }
 }
