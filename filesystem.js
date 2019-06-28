@@ -70,8 +70,23 @@ function writeData(persistenceDir, key, data, stringify) {
   });
 }
 
+function deleteData(persistenceDir, key) {
+  const filePath = getFilePath(persistenceDir, key);
+
+  return new Promise((fulfill, reject) => {
+    fs.unlink(filePath, (err) => {
+      if (err && err.code !== 'ENOENT') {
+        reject(err);
+      }
+
+      fulfill();
+    });
+  });
+}
+
 module.exports = {
   deleteDirectoryContents,
   readData,
   writeData,
+  deleteData,
 };

@@ -1,2 +1,4 @@
 test.js
 .vscode
+.eslintignore
+.eslintrc.js

@@ -58,7 +58,7 @@ class Storage {
       const currentData = await filesystem.readData(this.persistenceDir, key, defaultValue);
       const newData = await editFunction(currentData);
       if (newData === undefined && !this.allowUndefinedEdits) {
-        throw new Error('editFunction returned undefined. Is that a mistake? To disable this error, set options.allowUndefinedEdits to true in the FPersist constructor.');
+        throw new Error('editFunction returned undefined. Is that a mistake? To disable this error, set options.allowUndefinedEdits to true in the FPersist constructor. To delete data, use deleteData() instead.');
       }
 
       await filesystem.writeData(this.persistenceDir, key, newData, this.stringify);
@@ -89,6 +89,19 @@ class Storage {
     return this.enqueueForKey(
       key,
       () => filesystem.readData(this.persistenceDir, key, defaultValue),
+    );
+  }
+
+  /**
+   * Delete the key and its associated value.
+   * If the key does not exist in the database,
+   * this does nothing and fulfills.
+   * @param {string} key - The key to delete.
+   */
+  async deleteItem(key) {
+    return this.enqueueForKey(
+      key,
+      () => filesystem.deleteData(this.persistenceDir, key),
     );
   }
 
