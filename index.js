@@ -36,10 +36,15 @@ class Storage {
     }
 
     const doAction = this.queueForKey[key].then(() => action());
-
-    this.queueForKey[key] = doAction
+    const promiseForQueue = doAction
       .catch(() => {})
-      .then(() => { delete this.queueForKey[key]; });
+      .then(() => {
+        if (this.queueForKey[key] === promiseForQueue) {
+          delete this.queueForKey[key];
+        }
+      });
+
+    this.queueForKey[key] = promiseForQueue;
 
     return doAction;
   }
