@@ -1,11 +1,9 @@
 {
   "name": "fpersist",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Simple on disk persistence with safe, functional writes.",
   "main": "index.js",
-  "dependencies": {
-    "md5": "^2.2.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",

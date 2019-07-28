@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const md5 = require('md5');
+const crypto = require('crypto');
+
+function md5(str) {
+  return crypto.createHash('md5').update(str).digest('hex');
+}
 
 function getFilePath(persistenceDir, key) {
   return path.join(persistenceDir, md5(key));
