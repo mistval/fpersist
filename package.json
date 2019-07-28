@@ -4,8 +4,7 @@
   "description": "Simple on disk persistence with safe, functional writes.",
   "main": "index.js",
   "dependencies": {
-    "md5": "^2.2.1",
-    "mkdirp": "^0.5.1"
+    "md5": "^2.2.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

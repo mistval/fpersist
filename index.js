@@ -1,4 +1,4 @@
-const mkdirp = require('mkdirp');
+const fs = require('fs');
 const filesystem = require('./filesystem.js');
 
 class Storage {
@@ -18,7 +18,16 @@ class Storage {
     this.stringify = options.stringify || JSON.stringify;
     this.allowUndefinedEdits = options.allowUndefinedEdits || false;
     this.queueForKey = {};
-    this.madeDir = mkdirp(this.persistenceDir);
+
+    this.madeDir = new Promise((fulfill, reject) => {
+      fs.mkdir(this.persistenceDir, { recursive: true }, (err) => {
+        if (err) {
+          return reject(err);
+        }
+
+        return fulfill(err);
+      });
+    });
   }
 
   verifyNotClosed() {
