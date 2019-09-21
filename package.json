@@ -1,6 +1,6 @@
 {
   "name": "fpersist",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple on disk persistence with safe, functional writes.",
   "main": "index.js",
   "dependencies": {},

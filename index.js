@@ -20,12 +20,12 @@ class Storage {
     this.queueForKey = {};
 
     this.madeDir = new Promise((fulfill, reject) => {
-      fs.mkdir(this.persistenceDir, { recursive: true }, (err) => {
-        if (err) {
+      fs.mkdir(this.persistenceDir, (err) => {
+        if (err && err.code !== 'EEXIST') {
           return reject(err);
         }
 
-        return fulfill(err);
+        return fulfill();
       });
     });
   }
