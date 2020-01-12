@@ -55,7 +55,11 @@ function readData(persistenceDir, key, defaultValue) {
         return reject(err);
       }
 
-      return fulfill(JSON.parse(data).value);
+      try {
+        fulfill(JSON.parse(data).value);
+      } catch (err) {
+        reject(err);
+      }
     });
   });
 }
