@@ -37,7 +37,6 @@ class Storage {
   }
 
   async enqueueForKey(key, action) {
-    await this.madeDir;
     this.verifyNotClosed();
 
     if (!this.queueForKey[key]) {
@@ -68,6 +67,7 @@ class Storage {
    *   this value will be passed to the editFunction.
    */
   async editItem(key, editFunction, defaultValue) {
+    await this.madeDir;
     return this.enqueueForKey(key, async () => {
       const currentData = await filesystem.readData(this.persistenceDir, key, defaultValue);
       const newData = await editFunction(currentData);
@@ -100,6 +100,7 @@ class Storage {
    *   returned.
    */
   async getItem(key, defaultValue) {
+    await this.madeDir;
     return this.enqueueForKey(
       key,
       () => filesystem.readData(this.persistenceDir, key, defaultValue),
@@ -113,6 +114,7 @@ class Storage {
    * @param {string} key - The key to delete.
    */
   async deleteItem(key) {
+    await this.madeDir;
     return this.enqueueForKey(
       key,
       () => filesystem.deleteData(this.persistenceDir, key),
@@ -129,6 +131,11 @@ class Storage {
     this.closed = true;
     const queues = Object.values(this.queueForKey);
     return Promise.all(queues);
+  }
+
+  async getAllKeys() {
+    await this.madeDir;
+    return filesystem.getAllKeys(this.persistenceDir);
   }
 }
 

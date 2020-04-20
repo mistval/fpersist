@@ -56,9 +56,9 @@ function readData(persistenceDir, key, defaultValue) {
       }
 
       try {
-        fulfill(JSON.parse(data).value);
-      } catch (err) {
-        reject(err);
+        return fulfill(JSON.parse(data).value);
+      } catch (innerErr) {
+        return reject(innerErr);
       }
     });
   });
@@ -92,9 +92,22 @@ function deleteData(persistenceDir, key) {
   });
 }
 
+async function getAllKeys(persistenceDir) {
+  const fileNames = await fs.promises.readdir(persistenceDir);
+  const readFilePromises = fileNames.map(async (fileName) => {
+    const filePath = path.join(persistenceDir, fileName);
+    const fileContent = await fs.promises.readFile(filePath);
+    const fileContentParsed = JSON.parse(fileContent);
+    return fileContentParsed.key;
+  });
+
+  return Promise.all(readFilePromises);
+}
+
 module.exports = {
   deleteDirectoryContents,
   readData,
   writeData,
   deleteData,
+  getAllKeys,
 };
