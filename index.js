@@ -1,5 +1,5 @@
 const fs = require('fs');
-const filesystem = require('./filesystem.js');
+const filesystem = require('./filesystem');
 
 class Storage {
   /**
