@@ -29,7 +29,7 @@ function getPathsInDir(persistenceDir) {
         return reject(err);
       }
 
-      const filePaths = fileNames.map(fileName => path.join(persistenceDir, fileName));
+      const filePaths = fileNames.map((fileName) => path.join(persistenceDir, fileName));
       return fulfill(filePaths);
     });
   });
@@ -37,7 +37,7 @@ function getPathsInDir(persistenceDir) {
 
 async function deleteDirectoryContents(persistenceDir) {
   const filePaths = await getPathsInDir(persistenceDir);
-  const promises = filePaths.map(filePath => unlinkFile(filePath));
+  const promises = filePaths.map((filePath) => unlinkFile(filePath));
 
   return Promise.all(promises);
 }
