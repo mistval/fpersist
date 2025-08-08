@@ -62,6 +62,3 @@ typings/
 
 # IDE specific
 .vscode
-
-# scratch files
-test.js

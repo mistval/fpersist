@@ -9,7 +9,7 @@
     "eslint-plugin-import": "^2.15.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test test.js",
     "lint": "./node_modules/.bin/eslint .",
     "lintfix": "./node_modules/.bin/eslint --fix ."
   },
